@@ -54,6 +54,21 @@ describe('x64', function() {
         });
       });
 
+      // Future instructions to implement
+      it('call');
+      it('cld');
+      it('int');
+      it('jmp');
+      it('jz');
+      it('lea');
+      it('not');
+      it('pop');
+      it('push');
+      it('repne');
+      it('ret');
+      it('test');
+      it('xor');
+
     });
   });
 
