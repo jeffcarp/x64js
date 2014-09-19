@@ -56,4 +56,16 @@ describe('x64', function() {
 
     });
   });
+
+  describe('#readString()', function() {
+    it('executes multiple instructions', function() {
+      var str = [
+        'mov rax 6',
+        'mov rbx 7'
+      ].join('\n');
+      cpu = x64.readString(cpu, str);
+      assert.equal(cpu.registers.rax, 6);
+      assert.equal(cpu.registers.rbx, 7);;
+    });
+  });
 });
