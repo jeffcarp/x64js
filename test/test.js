@@ -46,6 +46,14 @@ describe('x64', function() {
         });
       });
 
+      describe('not', function() {
+        it('bitwise nots one register', function() {
+          cpu = x64.executeInstruction(cpu, 'mov rax, 7');
+          cpu = x64.executeInstruction(cpu, 'not rax');
+          assert.equal(cpu.registers.rax, -8);
+        });
+      });
+
     });
   });
 });

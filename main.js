@@ -39,7 +39,13 @@ var instructions = {
     var src = args[1];
     cpu.registers[dest] = cpu.registers[dest] + cpu.registers[src];
     return cpu;
-  }
+  },
+  not: function(cpu, args) {
+    var src = args[0];
+    var value = Number(cpu.registers[src]);
+    cpu.registers[src] = ~value;
+    return cpu;
+  },
 };
 
 var isValidInstruction = function(instruction) {
