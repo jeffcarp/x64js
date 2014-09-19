@@ -33,6 +33,12 @@ var instructions = {
     var register = args[0];
     cpu.registers[register] = Number(args[1]);
     return cpu;
+  },
+  add: function(cpu, args) {
+    var dest = args[0];
+    var src = args[1];
+    cpu.registers[dest] = cpu.registers[dest] + cpu.registers[src];
+    return cpu;
   }
 };
 
