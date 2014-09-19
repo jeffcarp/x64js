@@ -1,0 +1,14 @@
+{
+  "name": "x64js",
+  "version": "0.0.0",
+  "description": "A subset of the x64 instruction set",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Jeff Carpenter",
+  "license": "BSD-2-Clause"
+}
