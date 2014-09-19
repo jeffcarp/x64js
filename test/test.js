@@ -29,13 +29,6 @@ describe('x64', function() {
 
     describe('instructions:', function() {
 
-      describe('mov', function() {
-        it('should assign the rax register', function() {
-          cpu = x64.executeInstruction(cpu, 'mov rax, 5');
-          assert.equal(cpu.registers.rax, 5);
-        });
-      });
-
       describe('add', function() {
         it('adds src to dest by replacing dest', function() {
           cpu = x64.executeInstruction(cpu, 'mov rax, 7');
@@ -43,6 +36,13 @@ describe('x64', function() {
           cpu = x64.executeInstruction(cpu, 'add rax, rbx');
           assert.equal(cpu.registers.rax, 10);
           assert.equal(cpu.registers.rbx, 3);
+        });
+      });
+
+      describe('mov', function() {
+        it('should assign the rax register', function() {
+          cpu = x64.executeInstruction(cpu, 'mov rax, 5');
+          assert.equal(cpu.registers.rax, 5);
         });
       });
 
