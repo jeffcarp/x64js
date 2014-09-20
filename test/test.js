@@ -15,7 +15,8 @@ describe('x64', function() {
         rbx: 0,
         rcx: 0,
         rdx: 0
-      }
+      },
+      stack: []
     };
     assert.deepEqual(x64.aBlankCpu(), cpuSpec);
   });
@@ -54,6 +55,23 @@ describe('x64', function() {
         });
       });
 
+      describe('pop', function() {
+        it("pops a register's pointer and puts the value in dest", function() {
+          cpu = x64.executeInstruction(cpu, 'mov rax, 7');
+          cpu = x64.executeInstruction(cpu, 'push rax');
+          cpu = x64.executeInstruction(cpu, 'pop rbx');
+          assert.deepEqual(cpu.registers.rax, 7);
+          assert.deepEqual(cpu.registers.rbx, 7);
+        });
+      });
+
+      describe('push', function() {
+        it('pushes a register pointer onto the stack', function() {
+          cpu = x64.executeInstruction(cpu, 'push rax');
+          assert.deepEqual(cpu.stack, ['rax']);
+        });
+      });
+
       // Future instructions to implement
       it('call');
       it('cld');
@@ -61,9 +79,6 @@ describe('x64', function() {
       it('jmp');
       it('jz');
       it('lea');
-      it('not');
-      it('pop');
-      it('push');
       it('repne');
       it('ret');
       it('test');

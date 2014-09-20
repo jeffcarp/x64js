@@ -7,7 +7,8 @@ x64.aBlankCpu = function() {
       rbx: 0,
       rcx: 0,
       rdx: 0
-    }
+    },
+    stack: []
   };
 };
 
@@ -46,6 +47,16 @@ var instructions = {
     cpu.registers[src] = ~value;
     return cpu;
   },
+  pop: function(cpu, args) {
+    var dest = args[0];
+    var register = cpu.stack.pop();
+    cpu.registers[dest] = cpu.registers[register];
+    return cpu;
+  },
+  push: function(cpu, args) {
+    cpu.stack.push(args[0]);
+    return cpu;
+  }
 };
 
 var isValidInstruction = function(instruction) {
