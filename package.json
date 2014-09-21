@@ -4,10 +4,10 @@
   "description": "A subset of the x64 instruction set",
   "main": "main.js",
   "directories": {
-    "test": "test"
+    "test": "spec"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha spec"
   },
   "author": "Jeff Carpenter",
   "license": "BSD-2-Clause"
