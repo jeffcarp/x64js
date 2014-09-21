@@ -72,6 +72,17 @@ describe('x64', function() {
         });
       });
 
+      describe('xor', function() {
+        it('applies bitwise xor to src and dest and puts the value in src', function() {
+          cpu = x64.readString(cpu, [
+            'mov rax 1234',
+            'mov rbx 5678',
+            'xor rax rbx'
+          ]);
+          assert.equal(cpu.registers.rax, 4860);
+        });
+      });
+
       // Future instructions to implement
       it('call');
       it('cld');
@@ -82,7 +93,6 @@ describe('x64', function() {
       it('repne');
       it('ret');
       it('test');
-      it('xor');
 
     });
   });

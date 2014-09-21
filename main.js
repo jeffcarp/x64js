@@ -23,22 +23,25 @@ x64.executeInstruction = function(cpu, instruction) {
 
 // Reads an asm program string
 x64.readString = function(cpu, program) {
+  if (program instanceof Array) {
+    program = program.join('\n');
+  }
   if (typeof program !== 'string') {
-    return;
+    throw new Error('program was not a string');
   }
   return program.split('\n').reduce(x64.executeInstruction, cpu);
 };
 
 var instructions = {
-  mov: function(cpu, args) {
-    var register = args[0];
-    cpu.registers[register] = Number(args[1]);
-    return cpu;
-  },
   add: function(cpu, args) {
     var dest = args[0];
     var src = args[1];
     cpu.registers[dest] = cpu.registers[dest] + cpu.registers[src];
+    return cpu;
+  },
+  mov: function(cpu, args) {
+    var register = args[0];
+    cpu.registers[register] = Number(args[1]);
     return cpu;
   },
   not: function(cpu, args) {
@@ -55,6 +58,12 @@ var instructions = {
   },
   push: function(cpu, args) {
     cpu.stack.push(args[0]);
+    return cpu;
+  },
+  xor: function(cpu, args) {
+    var src = args[0];
+    var dest = args[1];
+    cpu.registers[src] = cpu.registers[src] ^ cpu.registers[dest];
     return cpu;
   }
 };
