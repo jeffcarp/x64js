@@ -8,35 +8,60 @@ x64.aBlankCpu = function() {
       rcx: 0,
       rdx: 0
     },
-    stack: []
+    stack: [],
+    instructionPointer: -1,
+    memory: []
   };
 };
 
-x64.programFromArray = function(instructions) {
-  var program = {
-    instructions: instructions,
-    sections: []
-  };
+x64.loadProgramIntoMemory = function(cpu, instructions) {
+  // Naive 1 program-per-time for now
+  cpu.memory = instructions.slice(0); // copy
+  return cpu;
+};
 
-  // Create sections with their respective instructions
-  var currentSection;
-  instructions.forEach(function(instruction) {
-    if (isALabel(instruction)) {
-      currentSection = instruction.replace(' ', '').replace(':', '');
-    }
-    else {
-      if (currentSection) {
-        if (!(currentSection in program.sections)) {
-          program.sections[currentSection] = {
-            instructions: []
-          };
-        }
-        program.sections[currentSection].instructions.push(instruction);
-      }
-    }
-  });
+x64.executeProgram = function(cpu) {
 
-  return program;
+  var startPointer = findLabelIndexStrict(cpu, '_start');
+  cpu.instructionPointer = startPointer;
+  var instructionCount = 0;
+
+  while (hasNextInstruction(cpu)) {
+
+    if (instructionCount > 100) {
+      throw new Error('Over 100 instructions.');
+    }
+
+    cpu.instructionPointer += 1;
+    instructionCount += 1;
+    var instruction = cpu.memory[cpu.instructionPointer];
+    instruction = instruction.trim(); // Should not have to do this here
+    console.log('>>>> instruction', instructionCount, instruction);
+
+    cpu = x64.executeInstruction(cpu, instruction);
+    console.log(cpu);
+  }
+
+  return cpu;
+};
+
+var hasNextInstruction = function(cpu) {
+  var instruction = cpu.memory[cpu.instructionPointer + 1];
+  return instruction && instruction.length;
+};
+
+var findLabelIndexStrict = function(cpu, label) {
+  var labelIndex = findLabelIndex(cpu, label);
+  if (labelIndex === -1) {
+    throw new Error("Couldn't find '"+label+"' label in program.");
+  }
+  return labelIndex;
+};
+
+var findLabelIndex = function(cpu, label) {
+  return cpu.memory.reduce(function(acc, instruction, index) {
+    return instruction === label+':' ? index : acc;
+  }, -1);
 };
 
 x64.executeInstruction = function(cpu, instruction) {
@@ -66,6 +91,20 @@ var instructions = {
     cpu.registers[dest] = cpu.registers[dest] + cpu.registers[src];
     return cpu;
   },
+  call: function(cpu, args) {
+    // Push the return pointer onto the stack
+    cpu.stack.push(cpu.instructionPointer);
+    var label = args[0];
+    var labelIndex = findLabelIndexStrict(cpu, label);
+    cpu.instructionPointer = labelIndex;
+    return cpu;
+  },
+  jmp: function(cpu, args) {
+    var label = args[0];
+    var labelIndex = findLabelIndexStrict(cpu, label);
+    cpu.instructionPointer = labelIndex;
+    return cpu;
+  },
   mov: function(cpu, args) {
     var register = args[0];
     cpu.registers[register] = Number(args[1]);
@@ -85,6 +124,12 @@ var instructions = {
   },
   push: function(cpu, args) {
     cpu.stack.push(args[0]);
+    return cpu;
+  },
+  ret: function(cpu, args) {
+    // Take the return pointer off of the stack
+    var returnPointer = cpu.stack.pop();
+    cpu.instructionPointer = returnPointer;
     return cpu;
   },
   xor: function(cpu, args) {
