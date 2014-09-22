@@ -17,6 +17,7 @@ npm test
 
 - [Intel 80x86 Assembly Language OpCodes (mathemainzel.info)](http://www.mathemainzel.info/files/x86asmref.html#mov)
 - [x86 Assembly Guide (cs.virginia.edu)](http://www.cs.virginia.edu/~evans/cs216/guides/x86.html)
+- [Say hello to x64 Assembly (0xax.blogspot.com)](http://0xax.blogspot.com/2014/08/say-hello-to-x64-assembly-part-1.html)
 
 ## Other cool things
 
