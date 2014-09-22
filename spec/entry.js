@@ -54,6 +54,19 @@ describe('x64', function() {
         });
       });
 
+      describe('jmp', function() {
+        it('jumps to a label', function() {
+          cpu = x64.readString(cpu, [
+            'iamcool:',
+            '  mov rax 582',
+            '_start:',
+            '  mov rax 426',
+            '  jmp iamcool'
+          ]);
+          assert.equal(cpu.registers.rax, 582);
+        });
+      });
+
       describe('mov', function() {
         it('should assign the rax register', function() {
           cpu = x64.executeInstruction(cpu, 'mov rax, 5');
@@ -101,7 +114,6 @@ describe('x64', function() {
       it('call');
       it('cld');
       it('int');
-      it('jmp');
       it('jz');
       it('lea');
       it('repne');
