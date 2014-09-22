@@ -21,6 +21,20 @@ describe('x64', function() {
     assert.deepEqual(x64.aBlankCpu(), cpuSpec);
   });
 
+  // Not sure where this should go
+  describe('labels:', function() {
+    var program = x64.programFromArray([
+      'lookalabel:',
+      '  push 6',
+      '  ret',
+      '_start:',
+      '  pop rax',
+      ' call lookalabel',
+    ]);
+    assert.equal(program.sections['_start'].instructions.length, 2);
+    assert.equal(program.sections['lookalabel'].instructions.length, 2);
+  });
+
   describe('#executeInstruction()', function() {
 
     it('should accept a blank string and do nothing', function() {

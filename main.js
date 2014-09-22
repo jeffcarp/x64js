@@ -12,6 +12,33 @@ x64.aBlankCpu = function() {
   };
 };
 
+x64.programFromArray = function(instructions) {
+  var program = {
+    instructions: instructions,
+    sections: []
+  };
+
+  // Create sections with their respective instructions
+  var currentSection;
+  instructions.forEach(function(instruction) {
+    if (isALabel(instruction)) {
+      currentSection = instruction.replace(' ', '').replace(':', '');
+    }
+    else {
+      if (currentSection) {
+        if (!(currentSection in program.sections)) {
+          program.sections[currentSection] = {
+            instructions: []
+          };
+        }
+        program.sections[currentSection].instructions.push(instruction);
+      }
+    }
+  });
+
+  return program;
+};
+
 x64.executeInstruction = function(cpu, instruction) {
   var opCode = instruction.split(' ').shift();
   var args = getArguments(instruction);
@@ -75,6 +102,11 @@ var isValidInstruction = function(instruction) {
 
 var isValidRegister = function(register) {
   return register in registers;
+};
+
+var isALabel = function(instruction) {
+  // Naive
+  return instruction.indexOf(':') !== -1;
 };
 
 var getArguments = function(str) {
