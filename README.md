@@ -1,9 +1,9 @@
-An attempt to recreate a subset of the x86\_64 instruction set in JavaScript.
+An attempt to create a toy CPU emulating a subset of the x86\_64 instruction set in JavaScript.
 
 ## TODO
 
 - [ ] Implement the 13 instructions stubbed in `test/test.js`
-- [ ] Implement labels
+- [x] Implement labels (could be improved)
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
 - [ ] Implement `section .text` with `global` keyword
 
