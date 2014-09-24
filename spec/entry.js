@@ -14,7 +14,8 @@ describe('x64', function() {
         rax: 0,
         rbx: 0,
         rcx: 0,
-        rdx: 0
+        rdx: 0,
+        flags: {}
       },
       stack: [],
       instructionPointer: -1,

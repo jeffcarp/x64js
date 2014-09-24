@@ -18,7 +18,36 @@ describe('instructions:', function() {
     });
   });
 
+  describe('call', function() {
+    /// TODO: Fix repeated test
+    it('pushes the return address on the stack and jumps to a label', function() {
+      cpu = x64.loadProgramIntoMemory(x64.aBlankCpu(), [
+        'iamcool:',
+        '  mov rax 582',
+        '  ret',
+        '_start:',
+        '  mov rax 426',
+        '  call iamcool'
+      ]);
+      cpu = x64.executeProgram(cpu);
+      assert.equal(cpu.registers.rax, 582);
+    });
+  });
+
+  describe('cld', function() {
+    it('sets the direction flag to 0', function() {
+      cpu = x64.loadProgramIntoMemory(x64.aBlankCpu(), [
+        '_start:',
+        '  cld',
+      ]);
+      cpu.registers.flags.DF = true;
+      cpu = x64.executeProgram(cpu);
+      assert.equal(cpu.registers.flags.DF, false);
+    });
+  });
+
   describe('jmp', function() {
+    /// TODO: This doesn't actually test jmp
     it('jumps to a label', function() {
       cpu = x64.loadProgramIntoMemory(x64.aBlankCpu(), [
         'iamcool:',
@@ -28,10 +57,43 @@ describe('instructions:', function() {
         '  mov rax 426',
         '  call iamcool'
       ]);
-      cpu = x64.executeProgram(cpu, {
-        debug: true
-      });
+      cpu = x64.executeProgram(cpu);
       assert.equal(cpu.registers.rax, 582);
+    });
+  });
+
+  describe('jz', function() {
+    it('jumps if ZF is true', function() {
+      cpu = x64.aBlankCpu();
+      cpu.registers.flags.ZF = true;
+      cpu = x64.loadProgramIntoMemory(cpu, [
+        'finn:',
+        '  mov rbx 582',
+        '  jmp _end',
+        '_start:',
+        '  jz finn',
+        '_end:',
+        '  mov rcx 629'
+      ]);
+      cpu = x64.executeProgram(cpu);
+      assert.equal(cpu.registers.rbx, 582);
+      assert.equal(cpu.registers.rcx, 629);
+    });
+    it('does not jump if ZF is false', function() {
+      cpu = x64.aBlankCpu();
+      cpu.registers.flags.ZF = false;
+      cpu = x64.loadProgramIntoMemory(cpu, [
+        'finn:',
+        '  mov rbx 582',
+        '  jmp _end',
+        '_start:',
+        '  jz finn',
+        '_end:',
+        '  mov rcx 629'
+      ]);
+      cpu = x64.executeProgram(cpu);
+      assert.equal(cpu.registers.rbx, 0);
+      assert.equal(cpu.registers.rcx, 629);
     });
   });
 
@@ -67,6 +129,36 @@ describe('instructions:', function() {
     });
   });
 
+  describe('ret', function() {
+    /// TODO: Fix repeated test
+    it('pops an address off the stack and jumps to it', function() {
+      cpu = x64.loadProgramIntoMemory(x64.aBlankCpu(), [
+        'iamcool:',
+        '  mov rax 582',
+        '  ret',
+        '_start:',
+        '  mov rax 426',
+        '  call iamcool'
+      ]);
+      cpu = x64.executeProgram(cpu);
+      assert.equal(cpu.registers.rax, 582);
+    });
+  });
+
+  describe('test', function() {
+    it('logically ANDs the two operands and sets ZF and SF', function() {
+      cpu = x64.loadProgramIntoMemory(x64.aBlankCpu(), [
+        '_start:',
+        '  mov rax 5',
+        '  test rax rax'
+      ]);
+      cpu = x64.executeProgram(cpu);
+      assert.equal(cpu.registers.flags.SF, true);//(number < 0)
+      assert.equal(cpu.registers.flags.ZF, false);
+    });
+    it ('sets PF');
+  });
+
   describe('xor', function() {
     it('applies bitwise xor to src and dest and puts the value in src', function() {
       cpu = x64.readString(cpu, [
@@ -79,13 +171,8 @@ describe('instructions:', function() {
   });
 
   // Future instructions to implement
-  it('call');
-  it('cld');
   it('int');
-  it('jz');
   it('lea');
   it('repne');
-  it('ret');
-  it('test');
 
 });

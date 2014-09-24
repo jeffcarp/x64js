@@ -6,7 +6,8 @@ x64.aBlankCpu = function() {
       rax: 0,
       rbx: 0,
       rcx: 0,
-      rdx: 0
+      rdx: 0,
+      flags: {}
     },
     stack: [],
     instructionPointer: -1,
@@ -36,10 +37,8 @@ x64.executeProgram = function(cpu) {
     instructionCount += 1;
     var instruction = cpu.memory[cpu.instructionPointer];
     instruction = instruction.trim(); // Should not have to do this here
-    console.log('>>>> instruction', instructionCount, instruction);
 
     cpu = x64.executeInstruction(cpu, instruction);
-    console.log(cpu);
   }
 
   return cpu;
@@ -67,6 +66,9 @@ var findLabelIndex = function(cpu, label) {
 x64.executeInstruction = function(cpu, instruction) {
   var opCode = instruction.split(' ').shift();
   var args = getArguments(instruction);
+  if (cpu.debug) {
+    console.log(cpu);
+  }
   if (isValidInstruction(opCode)) {
     cpu = instructions[opCode](cpu, args);
   }
@@ -84,6 +86,15 @@ x64.readString = function(cpu, program) {
   return program.split('\n').reduce(x64.executeInstruction, cpu);
 };
 
+var jumpToLabel = function(cpu, label) {
+  var labelIndex = findLabelIndexStrict(cpu, label);
+  // TODO: Blow up if no index?
+  // Or should an error be returning a pointer
+  // to an exception handler?
+  cpu.instructionPointer = labelIndex;
+  return cpu;
+};
+
 var instructions = {
   add: function(cpu, args) {
     var dest = args[0];
@@ -99,10 +110,17 @@ var instructions = {
     cpu.instructionPointer = labelIndex;
     return cpu;
   },
+  cld: function(cpu, args) {
+    cpu.registers.flags.DF = false;
+    return cpu;
+  },
   jmp: function(cpu, args) {
-    var label = args[0];
-    var labelIndex = findLabelIndexStrict(cpu, label);
-    cpu.instructionPointer = labelIndex;
+    return jumpToLabel(cpu, args[0]);
+  },
+  jz: function(cpu, args) {
+    if (cpu.registers.flags.ZF) {
+      cpu = jumpToLabel(cpu, args[0]);
+    }
     return cpu;
   },
   mov: function(cpu, args) {
@@ -130,6 +148,15 @@ var instructions = {
     // Take the return pointer off of the stack
     var returnPointer = cpu.stack.pop();
     cpu.instructionPointer = returnPointer;
+    return cpu;
+  },
+  test: function(cpu, args) {
+    var one = cpu.registers[args[0]];
+    var two = cpu.registers[args[1]];
+    var result = Number(one) & Number(two);
+    console.log('result', result);
+    cpu.registers.flags.SF = result >= 0;
+    cpu.registers.flags.ZF = result === 0;
     return cpu;
   },
   xor: function(cpu, args) {

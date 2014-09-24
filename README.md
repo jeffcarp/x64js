@@ -6,6 +6,7 @@ This is an attempt to create a toy CPU acting as an interpreter for a subset of 
 - [x] Implement labels (could be improved)
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
 - [ ] Implement `section .text` with `global` keyword
+- [ ] Implement `eip` containing "the address of the next instruction to be executed if no branching is done" 
 
 ## Run tests
 
