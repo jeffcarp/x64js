@@ -1,4 +1,4 @@
-An attempt to create a toy CPU emulating a subset of the x86\_64 instruction set in JavaScript.
+This is an attempt to create a toy CPU acting as an interpreter for a subset of the x86\_64 instruction set in JavaScript.
 
 ## TODO
 
