@@ -10,5 +10,9 @@
     "test": "mocha spec"
   },
   "author": "Jeff Carpenter",
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "mocha": "~1.21.4",
+    "chai": "~1.9.1"
+  }
 }
