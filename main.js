@@ -114,6 +114,17 @@ var instructions = {
     cpu.registers.flags.DF = false;
     return cpu;
   },
+  'int': function(cpu, args) {
+    // Execute syscall
+    if (args[0] === '0x80') {
+      var num = Number(cpu.registers.rax);
+      cpu = executeSyscallByNum(cpu, num);
+    }
+    else {
+      // Throw err if other vector?
+    }
+    return cpu;
+  },
   jmp: function(cpu, args) {
     return jumpToLabel(cpu, args[0]);
   },
@@ -186,6 +197,13 @@ var getArguments = function(str) {
   return str.replace(',', '')
             .split(' ')
             .slice(1);
+};
+
+var executeSyscallByNum = function(cpu, num) {
+  if (num === 20) { // getpid
+    cpu.registers.rax = 89;
+  }
+  return cpu;
 };
 
 module.exports = x64;

@@ -46,6 +46,20 @@ describe('instructions:', function() {
     });
   });
 
+  describe('int', function() {
+    it('executes getpid syscall', function() {
+      cpu = x64.loadProgramIntoMemory(x64.aBlankCpu(), [
+        '_start:',
+        '  mov rax 20',
+        '  int 0x80'
+      ]);
+      cpu = x64.executeProgram(cpu);
+      // Fake pid is 89 for the moment
+      // TODO: Find out if result actually is put in rax
+      assert.equal(cpu.registers.rax, 89);
+    });
+  });
+
   describe('jmp', function() {
     /// TODO: This doesn't actually test jmp
     it('jumps to a label', function() {
@@ -171,7 +185,6 @@ describe('instructions:', function() {
   });
 
   // Future instructions to implement
-  it('int');
   it('lea');
   it('repne');
 
