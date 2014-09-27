@@ -1,5 +1,7 @@
 var x64 = {};
 
+var instructions = require('./instructions');
+
 x64.aBlankCpu = function() {
   return {
     registers: {
@@ -7,6 +9,7 @@ x64.aBlankCpu = function() {
       rbx: 0,
       rcx: 0,
       rdx: 0,
+      eip: 0,
       flags: {}
     },
     stack: [],
@@ -95,89 +98,6 @@ var jumpToLabel = function(cpu, label) {
   return cpu;
 };
 
-var instructions = {
-  add: function(cpu, args) {
-    var dest = args[0];
-    var src = args[1];
-    cpu.registers[dest] = cpu.registers[dest] + cpu.registers[src];
-    return cpu;
-  },
-  call: function(cpu, args) {
-    // Push the return pointer onto the stack
-    cpu.stack.push(cpu.instructionPointer);
-    var label = args[0];
-    var labelIndex = findLabelIndexStrict(cpu, label);
-    cpu.instructionPointer = labelIndex;
-    return cpu;
-  },
-  cld: function(cpu, args) {
-    cpu.registers.flags.DF = false;
-    return cpu;
-  },
-  'int': function(cpu, args) {
-    // Execute syscall
-    if (args[0] === '0x80') {
-      var num = Number(cpu.registers.rax);
-      cpu = executeSyscallByNum(cpu, num);
-    }
-    else {
-      // Throw err if other vector?
-    }
-    return cpu;
-  },
-  jmp: function(cpu, args) {
-    return jumpToLabel(cpu, args[0]);
-  },
-  jz: function(cpu, args) {
-    if (cpu.registers.flags.ZF) {
-      cpu = jumpToLabel(cpu, args[0]);
-    }
-    return cpu;
-  },
-  mov: function(cpu, args) {
-    var register = args[0];
-    cpu.registers[register] = Number(args[1]);
-    return cpu;
-  },
-  not: function(cpu, args) {
-    var src = args[0];
-    var value = Number(cpu.registers[src]);
-    cpu.registers[src] = ~value;
-    return cpu;
-  },
-  pop: function(cpu, args) {
-    var dest = args[0];
-    var register = cpu.stack.pop();
-    cpu.registers[dest] = cpu.registers[register];
-    return cpu;
-  },
-  push: function(cpu, args) {
-    cpu.stack.push(args[0]);
-    return cpu;
-  },
-  ret: function(cpu, args) {
-    // Take the return pointer off of the stack
-    var returnPointer = cpu.stack.pop();
-    cpu.instructionPointer = returnPointer;
-    return cpu;
-  },
-  test: function(cpu, args) {
-    var one = cpu.registers[args[0]];
-    var two = cpu.registers[args[1]];
-    var result = Number(one) & Number(two);
-    console.log('result', result);
-    cpu.registers.flags.SF = result >= 0;
-    cpu.registers.flags.ZF = result === 0;
-    return cpu;
-  },
-  xor: function(cpu, args) {
-    var src = args[0];
-    var dest = args[1];
-    cpu.registers[src] = cpu.registers[src] ^ cpu.registers[dest];
-    return cpu;
-  }
-};
-
 var isValidInstruction = function(instruction) {
   // TODO: Make sure memory access is secure
   return instruction in instructions;
@@ -197,13 +117,6 @@ var getArguments = function(str) {
   return str.replace(',', '')
             .split(' ')
             .slice(1);
-};
-
-var executeSyscallByNum = function(cpu, num) {
-  if (num === 20) { // getpid
-    cpu.registers.rax = 89;
-  }
-  return cpu;
 };
 
 module.exports = x64;
