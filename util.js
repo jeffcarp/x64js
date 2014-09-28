@@ -4,14 +4,30 @@ util.isARegister = function(cpu, name) {
   return name in cpu.registers;
 };
 
-util.isAnIntermediate = function(cpu, op) {
+util.isAnIntermediate = function(op) {
   var firstChar = op[0];
-  var lastChar = op.split(op.length-1);
+  var lastChar = op.slice(op.length-1);
   return firstChar === '[' && lastChar === ']';
 };
 
-util.execIntermediate = function(cpu, value) {
+util.readIntermediate = function(cpu, value) {
+  Object.keys(cpu.registers).forEach(function(key) {
+    if (value.indexOf(key) !== -1) {
+      var regValue = cpu.registers[key];
+      value = value.replace(key, regValue);
+    }
+  });
   return value;
+};
+
+util.execIntermediate = function(cpu, value) {
+  var interpreted = util.readIntermediate(cpu, value);
+  var expression = interpreted.split('');
+  expression.shift();
+  expression.pop();
+  expression = expression.join('');
+  // TODO: Find a way to do this without eval
+  return eval(expression);
 };
 
 util.x86parity = function(val) {

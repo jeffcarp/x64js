@@ -79,6 +79,17 @@ describe('instructions', function() {
     it('loads the calculated address of dest into src', function() {
       cpu.registers.rbx = 8; // pointer
       cpu = instructions.lea(cpu, ['rax', 'rbx']);
+      assert.equal(cpu.registers.rax, 8);
+    });
+    it('interprets intermediates with pointers and subtraction', function() {
+      cpu.registers.rcx = 8;
+      cpu = instructions.lea(cpu, ['rax', '[rcx-1]']);
+      assert.equal(cpu.registers.rax, 7);
+    });
+    it('interprets intermediates with multiplication', function() {
+      cpu.registers.rcx = 8;
+      cpu = instructions.lea(cpu, ['rax', '[rcx*2]']);
+      assert.equal(cpu.registers.rax, 16);
     });
     it('does not modify any flags', function() {
       cpu = instructions.lea(cpu, ['rax', 'rbx']);

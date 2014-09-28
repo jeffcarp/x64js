@@ -61,8 +61,11 @@ instructions.jz = function(cpu, args) {
 instructions.lea = function(cpu, args) {
   var dest = args[0];
   var value = args[1];
-  if (util.isAnIntermediate(cpu, value)) {
+  if (util.isAnIntermediate(value)) {
     value = util.execIntermediate(cpu, value);
+  }
+  else if (util.isARegister(cpu, value)) {
+    value = cpu.registers[value];
   }
   cpu.registers[dest] = Number(value);
   return cpu;
