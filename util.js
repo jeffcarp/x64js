@@ -29,6 +29,5 @@ util.x86parity = function(val) {
   if (offset < 0) offset = 0;
   val = val.slice(offset); // last byte
   var numOnes = val.split('').filter(isOne).length; // num ones
-  console.log('val', val, 'numOnes', numOnes);
   return numOnes % 2 === 0;
 };
