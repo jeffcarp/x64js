@@ -11,13 +11,9 @@ instructions.add = function(cpu, args) {
 
 instructions['call'] =  function(cpu, args) {
   // Push the return pointer onto the stack
-  cpu.stack.push(cpu.instructionPointer);
-  // Breaking change -- address should be inserted at compile time
-  //var label = args[0];
-  //var labelIndex = findLabelIndexStrict(cpu, label);
+  cpu.stack.push(cpu.registers.eip);
   var address = Number(args[0]);
   cpu.registers.eip = address;
-  //cpu.instructionPointer = labelIndex;
   return cpu;
 };
 
@@ -44,7 +40,14 @@ instructions.int = function(cpu, args) {
 };
 
 instructions.jmp = function(cpu, args) {
-  cpu.registers.eip = args[0];
+  var value = args[0];
+  if (util.isALabel(cpu, value)) {
+    var address = util.findLabelIndexStrict(cpu, value)
+    cpu.registers.eip = address;
+  }
+  else {
+    cpu.registers.eip = value;
+  }
   return cpu;
 };
 

@@ -22,8 +22,8 @@ describe('instructions', function() {
   });
 
   describe('call', function() {
-    it('pushes the return address onto the stack and jumps to an address', function() {
-      cpu.instructionPointer = 5;
+    it('pushes the return address (EIP) onto the stack and jumps to an address', function() {
+      cpu.registers.eip = 5;
       cpu = instructions['call'](cpu, ['17']);
       assert.equal(cpu.stack[0], 5);
       assert.equal(cpu.registers.eip, 17);
@@ -49,7 +49,11 @@ describe('instructions', function() {
   });
 
   describe('jmp', function() {
-    it('sets eip to the jump address', function() {
+    it('sets EIP to a naked address', function() {
+      cpu = instructions.jmp(cpu, ['17']);
+      assert.equal(cpu.registers.eip, 17);
+    });
+    it('sets EIP to a label\s address', function() {
       cpu = instructions.jmp(cpu, ['17']);
       assert.equal(cpu.registers.eip, 17);
     });

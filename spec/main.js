@@ -24,8 +24,8 @@ describe('x64', function() {
           flags: {}
         },
         stack: [],
-        instructionPointer: -1,
-        memory: []
+        memory: [],
+        finished: false
       };
       assert.deepEqual(cpuSpec, cpu);
     });

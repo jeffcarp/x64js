@@ -1,6 +1,7 @@
-var x64 = {};
+var x64 = module.exports = {};
 
 var instructions = require('./instructions');
+var util = require('./util');
 
 x64.aBlankCpu = function() {
   return {
@@ -14,57 +15,52 @@ x64.aBlankCpu = function() {
       flags: {}
     },
     stack: [],
-    instructionPointer: -1,
-    memory: []
+    memory: [],
+    finished: false
   };
 };
 
 x64.loadProgramIntoMemory = function(cpu, instructions) {
   // Naive 1 program-per-time for now
   cpu.memory = instructions.slice(0); // copy
+  // Set EIP to _start
+  cpu.registers.eip = util.findLabelIndexStrict(cpu, '_start');
+  return cpu;
+};
+
+x64.stepProgramOnce = function(cpu) {
+
+  if (cpu.finished) {
+    console.log('Cpu has finished executing.');
+    return cpu;
+  }
+
+  var instruction = cpu.memory[cpu.registers.eip];
+  instruction = instruction.trim(); // Should not have to do this here
+  cpu.registers.eip += 1; // EIP is the next instruction if no branching
+  cpu = x64.executeInstruction(cpu, instruction);
+
   return cpu;
 };
 
 x64.executeProgram = function(cpu) {
 
-  var startPointer = findLabelIndexStrict(cpu, '_start');
-  cpu.instructionPointer = startPointer;
   var instructionCount = 0;
 
-  while (hasNextInstruction(cpu)) {
+  while (!cpu.finished) {
 
     if (instructionCount > 100) {
       throw new Error('Over 100 instructions.');
     }
 
-    cpu.instructionPointer += 1;
-    instructionCount += 1;
-    var instruction = cpu.memory[cpu.instructionPointer];
+    var instruction = cpu.memory[cpu.registers.eip];
     instruction = instruction.trim(); // Should not have to do this here
+    cpu.registers.eip += 1;
 
     cpu = x64.executeInstruction(cpu, instruction);
   }
 
   return cpu;
-};
-
-var hasNextInstruction = function(cpu) {
-  var instruction = cpu.memory[cpu.instructionPointer + 1];
-  return instruction && instruction.length;
-};
-
-var findLabelIndexStrict = function(cpu, label) {
-  var labelIndex = findLabelIndex(cpu, label);
-  if (labelIndex === -1) {
-    throw new Error("Couldn't find '"+label+"' label in program.");
-  }
-  return labelIndex;
-};
-
-var findLabelIndex = function(cpu, label) {
-  return cpu.memory.reduce(function(acc, instruction, index) {
-    return instruction === label+':' ? index : acc;
-  }, -1);
 };
 
 x64.executeInstruction = function(cpu, instruction) {
@@ -79,19 +75,8 @@ x64.executeInstruction = function(cpu, instruction) {
   return cpu;
 };
 
-// Reads an asm program string
-x64.readString = function(cpu, program) {
-  if (program instanceof Array) {
-    program = program.join('\n');
-  }
-  if (typeof program !== 'string') {
-    throw new Error('program was not a string');
-  }
-  return program.split('\n').reduce(x64.executeInstruction, cpu);
-};
-
 var jumpToLabel = function(cpu, label) {
-  var labelIndex = findLabelIndexStrict(cpu, label);
+  var labelIndex = util.findLabelIndexStrict(cpu, label);
   // TODO: Blow up if no index?
   // Or should an error be returning a pointer
   // to an exception handler?
@@ -119,5 +104,3 @@ var getArguments = function(str) {
             .split(' ')
             .slice(1);
 };
-
-module.exports = x64;

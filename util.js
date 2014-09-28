@@ -31,3 +31,24 @@ util.x86parity = function(val) {
   var numOnes = val.split('').filter(isOne).length; // num ones
   return numOnes % 2 === 0;
 };
+
+util.findLabelIndexStrict = function(cpu, label) {
+  var labelIndex = util.findLabelIndex(cpu, label);
+  if (labelIndex === -1) {
+    throw new Error("Couldn't find '"+label+"' label in program.");
+  }
+  return labelIndex;
+};
+
+util.findLabelIndex = function(cpu, label) {
+  return cpu.memory.reduce(function(acc, instruction, index) {
+    return instruction === label+':' ? index : acc;
+  }, -1);
+};
+
+util.isALabel = function(cpu, value) {
+  return cpu.memory.some(function(op) {
+    var cmp = op.trim().replace(':', '');
+    return cmp === value;
+  });
+};

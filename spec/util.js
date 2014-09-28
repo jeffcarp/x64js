@@ -1,5 +1,6 @@
 var util = require('../util');
 var assert = require('chai').assert;
+var specData = require('./spec-data');
 var x64 = require('../main');
 var cpu;
 
@@ -29,6 +30,17 @@ describe('util', function() {
     });
     it('successfully computes 1835', function() {
       assert.isTrue(util.x86parity(1835));
+    });
+  });
+
+  describe('isALabel', function() {
+    it('finds _start', function() {
+      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      assert.isTrue(util.isALabel(cpu, '_start'));
+    });
+    it('does not have its jimmies rustled', function() {
+      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      assert.isFalse(util.isALabel(cpu, 'jimmies'));
     });
   });
 
