@@ -1,5 +1,6 @@
 var instructions = module.exports = {};
 var syscalls = require('./syscalls');
+var util = require('./util');
 
 instructions.add = function(cpu, args) {
   var dest = args[0];
@@ -45,21 +46,32 @@ instructions.int = function(cpu, args) {
 instructions.jmp = function(cpu, args) {
   cpu.registers.eip = args[0];
   return cpu;
-  // !! Breaking change
-  //return jumpToLabel(cpu, args[0]);
 };
 
 instructions.jz = function(cpu, args) {
   if (cpu.registers.flags.ZF) {
     cpu.registers.eip = args[0];
-    //cpu = jumpToLabel(cpu, args[0]);
   }
   return cpu;
 };
 
+instructions.lea = function(cpu, args) {
+  var dest = args[0];
+  var value = args[1];
+  if (util.isAnIntermediate(cpu, value)) {
+    value = util.execIntermediate(cpu, value);
+  }
+  cpu.registers[dest] = Number(value);
+  return cpu;
+};
+
 instructions.mov = function(cpu, args) {
-  var register = args[0];
-  cpu.registers[register] = Number(args[1]);
+  var dest = args[0];
+  var value = args[1];
+  if (util.isARegister(cpu, value)) {
+    value = cpu.registers[value];
+  }
+  cpu.registers[dest] = Number(value);
   return cpu;
 };
 
@@ -72,20 +84,25 @@ instructions.not = function(cpu, args) {
 
 instructions.pop = function(cpu, args) {
   var dest = args[0];
-  var register = cpu.stack.pop();
-  cpu.registers[dest] = cpu.registers[register];
+  var value = cpu.stack.pop();
+  if (util.isARegister(cpu, value)) {
+    value = cpu.registers[value];
+  }
+  cpu.registers[dest] = value;
   return cpu;
 };
 
 instructions.push = function(cpu, args) {
-  cpu.stack.push(args[0]);
+  var value = args[0];
+  if (!util.isARegister(cpu, value)) {
+    value = Number(value);
+  }
+  cpu.stack.push(value);
   return cpu;
 };
 
 instructions.ret = function(cpu, args) {
-  // Take the return pointer off of the stack
-  var returnPointer = cpu.stack.pop();
-  cpu.instructionPointer = returnPointer;
+  cpu.registers.eip = cpu.stack.pop();
   return cpu;
 };
 
@@ -93,7 +110,6 @@ instructions.test = function(cpu, args) {
   var one = cpu.registers[args[0]];
   var two = cpu.registers[args[1]];
   var result = Number(one) & Number(two);
-  console.log('result', result);
   cpu.registers.flags.SF = result >= 0;
   cpu.registers.flags.ZF = result === 0;
   return cpu;

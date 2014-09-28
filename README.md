@@ -23,3 +23,7 @@ npm test
 ## Other cool things
 
 - [ebradbury/assembly-adventures (github.com)](https://github.com/ebradbury/assembly-adventures/blob/master/strlen-args.asm)
+
+## Random tips
+
+- In `[rax*2]`, the square brackets act just like the C `*` dereference operator.
