@@ -32,7 +32,7 @@ describe('x64', function() {
   });
 
   describe('loadProgramIntoMemory', function() {
-    it('copies an array of strings into memory', function() {
+    it.only('copies an array of strings into memory', function() {
       var program = specData.tinyProgram();
       cpu = x64.loadProgramIntoMemory(cpu, program);
       assert.deepEqual(cpu.memory, program);

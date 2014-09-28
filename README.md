@@ -2,7 +2,7 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 
 ## TODO
 
-- [ ] Implement the 13 instructions stubbed in `test/test.js`
+- [x] Implement the 13 instructions stubbed in `test/test.js`
 - [x] Implement labels (could be improved)
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
 - [ ] Implement `section .text` with `global` keyword
