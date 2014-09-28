@@ -13,3 +13,22 @@ util.isAnIntermediate = function(cpu, op) {
 util.execIntermediate = function(cpu, value) {
   return value;
 };
+
+util.x86parity = function(val) {
+  // The PF flag on the x86 architecture
+  // only represents the least significant
+  // byte of the result
+  // Returns true if num of bits set (in last byte) is even
+  var isOne = function(x) {
+    return Number(x) === 1;
+  };
+
+  // Maybe break up this fn?
+  val = val.toString(2); // to binary
+  var offset = val.length - 8;
+  if (offset < 0) offset = 0;
+  val = val.slice(offset); // last byte
+  var numOnes = val.split('').filter(isOne).length; // num ones
+  console.log('val', val, 'numOnes', numOnes);
+  return numOnes % 2 === 0;
+};

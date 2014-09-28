@@ -139,13 +139,14 @@ describe('instructions', function() {
   });
 
   describe('test', function() {
-    it('logically ANDs the two operands and sets ZF and SF', function() {
+    it('logically ANDs the two operands and sets ZF, SF, and PF', function() {
       cpu.registers.rax = 5;
       cpu = instructions.test(cpu, ['rax', 'rax']);
-      assert.equal(cpu.registers.flags.SF, true);//(number < 0)
-      assert.equal(cpu.registers.flags.ZF, false);
+      assert.isTrue(cpu.registers.flags.SF); // (number < 0)
+      assert.isFalse(cpu.registers.flags.ZF);
+      // PF represents the parity of only the least significant byte of the result
+      assert.isTrue(cpu.registers.flags.PF);
     });
-    it ('sets PF');
   });
 
   describe('xor', function() {

@@ -112,6 +112,7 @@ instructions.test = function(cpu, args) {
   var result = Number(one) & Number(two);
   cpu.registers.flags.SF = result >= 0;
   cpu.registers.flags.ZF = result === 0;
+  cpu.registers.flags.PF = util.x86parity(result);
   return cpu;
 };
 

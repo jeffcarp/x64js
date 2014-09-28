@@ -23,4 +23,13 @@ describe('util', function() {
     });
   });
 
+  describe('x86parity', function() {
+    it('successfully computes 8', function() {
+      assert.isFalse(util.x86parity(8));
+    });
+    it('successfully computes 1835', function() {
+      assert.isTrue(util.x86parity(1835));
+    });
+  });
+
 });
