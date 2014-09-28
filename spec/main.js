@@ -1,4 +1,5 @@
 var assert = require('chai').assert;
+var specData = require('./spec-data');
 var x64 = require('../main');
 var cpu;
 
@@ -22,6 +23,14 @@ describe('x64', function() {
       instructionPointer: -1,
       memory: []
     };
-    assert.deepEqual({}, {});
+    //assert.deepEqual({}, {});
+  });
+
+  describe('loadProgramIntoMemory', function() {
+    it('copies an array of strings', function() {
+      var program = specData.tinyProgram();
+      cpu = x64.loadProgramIntoMemory(cpu, program);
+      assert.deepEqual(cpu.memory, program);
+    });
   });
 });
