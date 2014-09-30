@@ -26,4 +26,4 @@ npm test
 
 ## Random tips
 
-- In `[rax*2]`, the square brackets act just like the C `*` dereference operator.
+- In `[rax*2]`, the square brackets act just like the C `*` dereference operator. In this case, if `rax` held a pointer (let's say `4`), the interpreter would calculate `4*2` and then dereference whatever was in memory address `8`.
