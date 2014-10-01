@@ -37,6 +37,15 @@ describe('x64', function() {
       cpu = x64.loadProgramIntoMemory(cpu, program);
       assert.deepEqual(cpu.memory, program);
     });
+    it('sets EIP register to _start label', function() {
+      var program = specData.program('tiny-program-2');
+      cpu = x64.loadProgramIntoMemory(cpu, program);
+      assert.equal(cpu.registers.eip, 9); // Blank lines don't count
+    });
+    it('throws an error if no _start label found', function() {
+      var fn = x64.loadProgramIntoMemory.bind(this, cpu, ['mov rax 6'])
+      assert.throws(fn, "Couldn't find");
+    });
   });
 
   describe('stepProgramOnce', function() {
