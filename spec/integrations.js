@@ -7,7 +7,7 @@ var setsCpu = function() {
   cpu = x64.aBlankCpu();
 };
 
-describe('x64', function() {
+describe('integration tests:', function() {
 
   beforeEach(setsCpu);
 
