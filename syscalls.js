@@ -1,14 +1,13 @@
 var syscalls = module.exports = {};
 
-// exit()
+// exit
 syscalls[1] = function(cpu) {
   cpu.finished = true;
   return cpu;
 };
 
-// getpid()
+// getpid
 syscalls[20] = function(cpu) {
-  // Dummy pid for now
-  cpu.registers.rax = 89;
+  cpu.registers.rax = 89; // Dummy pid for now
   return cpu;
 };
