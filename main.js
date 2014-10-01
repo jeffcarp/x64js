@@ -20,6 +20,7 @@ x64.aBlankCpu = function() {
   };
 };
 
+// Takes an array of strings
 x64.loadProgramIntoMemory = function(cpu, instructions) {
   // Naive 1 program-per-time for now
   cpu.memory = instructions.slice(0); // copy
@@ -27,6 +28,9 @@ x64.loadProgramIntoMemory = function(cpu, instructions) {
   cpu.registers.eip = util.findLabelIndexStrict(cpu, '_start');
   return cpu;
 };
+
+// Would be nice to have:
+x64.loadProgramIntoMemoryFromFile = null;
 
 x64.stepProgramOnce = function(cpu) {
 
