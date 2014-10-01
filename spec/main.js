@@ -39,4 +39,18 @@ describe('x64', function() {
     });
   });
 
+  describe('stepProgramOnce', function() {
+    it('takes one step at a time', function() {
+      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      assert.equal(cpu.registers.eip, 0);
+      cpu = x64.stepProgramOnce(cpu);
+      assert.equal(cpu.registers.eip, 1);
+      cpu = x64.stepProgramOnce(cpu);
+      assert.equal(cpu.registers.eip, 2);
+      assert.equal(cpu.registers.rax, 5);
+      cpu = x64.stepProgramOnce(cpu);
+      assert.equal(cpu.registers.eip, 3);
+    });
+  });
+
 });
