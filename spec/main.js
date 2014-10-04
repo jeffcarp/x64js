@@ -21,7 +21,6 @@ describe('x64', function() {
           rcx: 0,
           rdx: 0,
           eip: 0,       // next instruction
-          cx: 0,        // count
           flags: {}
         },
         stack: [],

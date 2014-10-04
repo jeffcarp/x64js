@@ -11,7 +11,6 @@ x64.aBlankCpu = function() {
       rcx: 0,
       rdx: 0,
       eip: 0,
-      cx:  0,
       flags: {}
     },
     stack: [],
