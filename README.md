@@ -2,6 +2,7 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 
 ## TODO
 
+- [ ] Add public API usage in README (`aBlankCpu()`, `stepProgramOnce()`)
 - [x] Implement the 13 instructions stubbed in `test/test.js`
 - [x] Implement labels (could be improved)
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
