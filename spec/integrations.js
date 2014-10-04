@@ -17,7 +17,7 @@ describe('integration tests:', function() {
     cpu = x64.executeProgram(cpu);
 
     assert.isTrue(cpu.finished);
-    assert.deepEqual(cpu.stack, []);
+    assert.deepEqual(cpu.stack, [0]);
     assert.equal(cpu.registers.rax, 1);
     assert.equal(cpu.registers.rbx, 0);
     assert.equal(cpu.registers.eip, 7);

@@ -12,6 +12,7 @@ describe('x64', function() {
   beforeEach(setsCpu);
 
   describe('aBlankCpu', function() {
+
     it('returns a full CPU', function() {
       var cpuSpec = {
         registers: {
@@ -29,26 +30,43 @@ describe('x64', function() {
       };
       assert.deepEqual(cpuSpec, cpu);
     });
+
   });
 
   describe('loadProgramIntoMemory', function() {
+
     it('copies an array of strings into memory', function() {
       var program = specData.tinyProgram();
       cpu = x64.loadProgramIntoMemory(cpu, program);
       assert.deepEqual(cpu.memory, program);
     });
+
     it('sets EIP register to _start label', function() {
       var program = specData.program('tiny-program-2');
       cpu = x64.loadProgramIntoMemory(cpu, program);
       assert.equal(cpu.registers.eip, 9); // Blank lines don't count
     });
+
     it('throws an error if no _start label found', function() {
       var fn = x64.loadProgramIntoMemory.bind(this, cpu, ['mov rax 6'])
       assert.throws(fn, "Couldn't find");
     });
+
+    it('the stack should be initialized with argc (0 for now)', function() {
+      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      assert.deepEqual(cpu.stack, [0]);
+    });
+
+    it('reads any constants into global memory', function() {
+    });
+
+    it('reads and sets section .text containing global vars', function() {
+    });
+
   });
 
   describe('stepProgramOnce', function() {
+
     it('takes one step at a time', function() {
       cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
       assert.equal(cpu.registers.eip, 0);
@@ -60,6 +78,7 @@ describe('x64', function() {
       cpu = x64.stepProgramOnce(cpu);
       assert.equal(cpu.registers.eip, 3);
     });
+
   });
 
 });

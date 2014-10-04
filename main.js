@@ -26,6 +26,8 @@ x64.loadProgramIntoMemory = function(cpu, instructions) {
   cpu.memory = instructions.slice(0); // copy
   // Set EIP to _start
   cpu.registers.eip = util.findLabelIndexStrict(cpu, '_start');
+  // Push argc (0 for now) onto stack
+  cpu.stack.push(0);
   return cpu;
 };
 
