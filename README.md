@@ -23,10 +23,7 @@ cpu = x64.stepProgramOnce(cpu);
 ## Goals
 
 - To be able to feed this module a reasonably simple NASM file and have it produce the expected output.
-
-## Style and Structure
-
-- This is intentionally coded in a functional style, leaving the management of state up to you.
+- To design this system in functional style, leaving management of state up to you.
 
 ## Reference
 
@@ -41,7 +38,7 @@ cpu = x64.stepProgramOnce(cpu);
 ## Random tips
 
 - In `[rax*2]`, the square brackets act just like the C `*` dereference operator. In this case, if `rax` held a pointer (let's say `4`), the interpreter would calculate `4*2` and then dereference whatever was in memory address `8`.
-- 
+
 ## Assumptions and Limitations
 
 - This cpu can only hold one program in memory at a time.
