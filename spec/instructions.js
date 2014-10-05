@@ -22,11 +22,11 @@ describe('instructions', function() {
   });
 
   describe('call', function() {
-    it('pushes the return address (EIP) onto the stack and jumps to an address', function() {
-      cpu.registers.eip = 5;
+    it('pushes the return address (RIP) onto the stack and jumps to an address', function() {
+      cpu.registers.rip = 5;
       cpu = instructions['call'](cpu, ['17']);
       assert.equal(cpu.stack[0], 5);
-      assert.equal(cpu.registers.eip, 17);
+      assert.equal(cpu.registers.rip, 17);
     });
   });
 
@@ -49,28 +49,28 @@ describe('instructions', function() {
   });
 
   describe('jmp', function() {
-    it('sets EIP to a naked address', function() {
+    it('sets RIP to a naked address', function() {
       cpu = instructions.jmp(cpu, ['17']);
-      assert.equal(cpu.registers.eip, 17);
+      assert.equal(cpu.registers.rip, 17);
     });
-    it('sets EIP to a label\s address', function() {
+    it('sets RIP to a label\s address', function() {
       cpu = instructions.jmp(cpu, ['17']);
-      assert.equal(cpu.registers.eip, 17);
+      assert.equal(cpu.registers.rip, 17);
     });
   });
 
   describe('jz', function() {
-    it('sets EIP to address if ZF is true', function() {
-      cpu.registers.eip = 77;
+    it('sets RIP to address if ZF is true', function() {
+      cpu.registers.rip = 77;
       cpu.registers.flags.ZF = true;
       cpu = instructions.jz(cpu, ['18']);
-      assert.equal(cpu.registers.eip, 18);
+      assert.equal(cpu.registers.rip, 18);
     });
-    it('does not set EIP if ZF is false', function() {
-      cpu.registers.eip = 77;
+    it('does not set RIP if ZF is false', function() {
+      cpu.registers.rip = 77;
       cpu.registers.flags.ZF = false;
       cpu = instructions.jz(cpu, ['18']);
-      assert.equal(cpu.registers.eip, 77);
+      assert.equal(cpu.registers.rip, 77);
     });
   });
 
@@ -146,10 +146,10 @@ describe('instructions', function() {
   });
 
   describe('ret', function() {
-    it('pops a pointer from the stack to EIP', function() {
+    it('pops a pointer from the stack to RIP', function() {
       cpu.stack.push(14);
       cpu = instructions.ret(cpu, []);
-      assert.equal(cpu.registers.eip, 14);
+      assert.equal(cpu.registers.rip, 14);
     });
   });
 

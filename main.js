@@ -10,7 +10,7 @@ x64.aBlankCpu = function() {
       rbx: 0,
       rcx: 0,
       rdx: 0,
-      eip: 0,
+      rip: 0,
       flags: {}
     },
     stack: [],
@@ -23,8 +23,8 @@ x64.aBlankCpu = function() {
 x64.loadProgramIntoMemory = function(cpu, instructions) {
   // Naive 1 program-per-time for now
   cpu.memory = instructions.slice(0); // copy
-  // Set EIP to _start
-  cpu.registers.eip = util.findLabelIndexStrict(cpu, '_start');
+  // Set rip to _start
+  cpu.registers.rip = util.findLabelIndexStrict(cpu, '_start');
   // Push argc (0 for now) onto stack
   cpu.stack.push(0);
   return cpu;
@@ -40,9 +40,9 @@ x64.stepProgramOnce = function(cpu) {
     return cpu;
   }
 
-  var instruction = cpu.memory[cpu.registers.eip];
+  var instruction = cpu.memory[cpu.registers.rip];
   instruction = instruction.trim(); // Should not have to do this here
-  cpu.registers.eip += 1; // EIP is the next instruction if no branching
+  cpu.registers.rip += 1; // rip is the next instruction if no branching
   cpu = x64.executeInstruction(cpu, instruction);
 
   return cpu;
@@ -58,9 +58,9 @@ x64.executeProgram = function(cpu) {
       throw new Error('Over 100 instructions.');
     }
 
-    var instruction = cpu.memory[cpu.registers.eip];
+    var instruction = cpu.memory[cpu.registers.rip];
     instruction = instruction.trim(); // Should not have to do this here
-    cpu.registers.eip += 1;
+    cpu.registers.rip += 1;
 
     cpu = x64.executeInstruction(cpu, instruction);
   }

@@ -7,7 +7,7 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 - [x] Implement labels (could be improved)
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
 - [ ] Implement `section .text` with `global` keyword
-- [x] Change cpu.instructionPointer to `eip` - containing "the address of the next instruction to be executed if no branching is done"
+- [x] Change cpu.instructionPointer to `rip` - containing "the address of the next instruction to be executed if no branching is done"
 
 ## Run tests
 

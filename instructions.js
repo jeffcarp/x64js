@@ -11,9 +11,9 @@ instructions.add = function(cpu, args) {
 
 instructions['call'] =  function(cpu, args) {
   // Push the return pointer onto the stack
-  cpu.stack.push(cpu.registers.eip);
+  cpu.stack.push(cpu.registers.rip);
   var address = Number(args[0]);
-  cpu.registers.eip = address;
+  cpu.registers.rip = address;
   return cpu;
 };
 
@@ -43,17 +43,17 @@ instructions.jmp = function(cpu, args) {
   var value = args[0];
   if (util.isALabel(cpu, value)) {
     var address = util.findLabelIndexStrict(cpu, value)
-    cpu.registers.eip = address;
+    cpu.registers.rip = address;
   }
   else {
-    cpu.registers.eip = value;
+    cpu.registers.rip = value;
   }
   return cpu;
 };
 
 instructions.jz = function(cpu, args) {
   if (cpu.registers.flags.ZF) {
-    cpu.registers.eip = args[0];
+    cpu.registers.rip = args[0];
   }
   return cpu;
 };
@@ -108,7 +108,7 @@ instructions.push = function(cpu, args) {
 };
 
 instructions.ret = function(cpu, args) {
-  cpu.registers.eip = cpu.stack.pop();
+  cpu.registers.rip = cpu.stack.pop();
   return cpu;
 };
 

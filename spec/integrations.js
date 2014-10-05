@@ -20,7 +20,7 @@ describe('integration tests:', function() {
     assert.deepEqual(cpu.stack, [0]);
     assert.equal(cpu.registers.rax, 1);
     assert.equal(cpu.registers.rbx, 0);
-    assert.equal(cpu.registers.eip, 7);
+    assert.equal(cpu.registers.rip, 7);
   });
 
 });

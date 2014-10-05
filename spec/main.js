@@ -20,7 +20,7 @@ describe('x64', function() {
           rbx: 0,
           rcx: 0,
           rdx: 0,
-          eip: 0,       // next instruction
+          rip: 0,       // next instruction
           flags: {}
         },
         stack: [],
@@ -40,10 +40,10 @@ describe('x64', function() {
       assert.deepEqual(cpu.memory, program);
     });
 
-    it('sets EIP register to _start label', function() {
+    it('sets RIP register to _start label', function() {
       var program = specData.program('tiny-program-2');
       cpu = x64.loadProgramIntoMemory(cpu, program);
-      assert.equal(cpu.registers.eip, 9); // Blank lines don't count
+      assert.equal(cpu.registers.rip, 9); // Blank lines don't count
     });
 
     it('throws an error if no _start label found', function() {
@@ -68,14 +68,14 @@ describe('x64', function() {
 
     it('takes one step at a time', function() {
       cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
-      assert.equal(cpu.registers.eip, 0);
+      assert.equal(cpu.registers.rip, 0);
       cpu = x64.stepProgramOnce(cpu);
-      assert.equal(cpu.registers.eip, 1);
+      assert.equal(cpu.registers.rip, 1);
       cpu = x64.stepProgramOnce(cpu);
-      assert.equal(cpu.registers.eip, 2);
+      assert.equal(cpu.registers.rip, 2);
       assert.equal(cpu.registers.rax, 5);
       cpu = x64.stepProgramOnce(cpu);
-      assert.equal(cpu.registers.eip, 3);
+      assert.equal(cpu.registers.rip, 3);
     });
 
   });
