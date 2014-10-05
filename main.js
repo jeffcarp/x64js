@@ -8,6 +8,7 @@ x64.aBlankCpu = function() {
     stdin: '',
     stdout: '',
     stderr: '',
+    globals: [],
     registers: {
       rax: 0,
       rbx: 0,
@@ -24,12 +25,23 @@ x64.aBlankCpu = function() {
 
 // Takes an array of strings
 x64.loadProgramIntoMemory = function(cpu, instructions) {
+
   // Naive 1 program-per-time for now
   cpu.memory = instructions.slice(0); // copy
+
   // Set rip to _start
   cpu.registers.rip = util.findLabelIndexStrict(cpu, '_start');
+
   // Push argc (0 for now) onto stack
   cpu.stack.push(0);
+
+  // Read globals
+  cpu.globals = cpu.memory.filter(function(instr) {
+    return util.opFromInstruction(instr) === 'global';
+  }).map(function(instr) {
+    return getArguments(instr).shift();
+  });
+
   return cpu;
 };
 
@@ -73,11 +85,7 @@ x64.executeProgram = function(cpu) {
 
 x64.executeInstruction = function(cpu, instruction) {
 
-  // Remove any comment
-  instruction = instruction.replace(/;.*$/, '');
-  instruction = instruction.trim();
-
-  var opCode = instruction.split(' ').shift();
+  var opCode = util.opFromInstruction(instruction);
   var args = getArguments(instruction);
   if (cpu.debug) {
     console.log(cpu);

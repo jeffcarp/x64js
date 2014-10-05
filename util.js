@@ -70,3 +70,11 @@ util.isALabel = function(cpu, value) {
     return cmp === value;
   });
 };
+
+util.opFromInstruction = function(instruction) {
+  return instruction
+    .replace(/;.*$/, '')
+    .trim()
+    .split(' ')
+    .shift();
+};

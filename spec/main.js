@@ -18,6 +18,7 @@ describe('x64', function() {
         stdin: '',
         stdout: '',
         stderr: '',
+        globals: [],
         registers: {
           rax: 0,
           rbx: 0,
@@ -60,9 +61,8 @@ describe('x64', function() {
     });
 
     it('reads any constants into global memory', function() {
-    });
-
-    it('reads and sets section .text containing global vars', function() {
+      cpu = x64.loadProgramIntoMemory(cpu, specData.program('hello-world'));
+      assert.include(cpu.globals, '_start');
     });
 
   });
