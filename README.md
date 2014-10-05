@@ -8,6 +8,20 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
 - [ ] Implement `section .text` with `global` keyword
 - [x] Change cpu.instructionPointer to `rip` - containing "the address of the next instruction to be executed if no branching is done"
+- [x] Implement comments
+
+## API
+
+```javascript
+var x64 = require('x64js');
+
+var cpu = x64.aBlankCpu();
+```
+
+## Assumptions
+
+- This cpu can only hold one program in memory at a time.
+- There is no operating system.
 
 ## Run tests
 

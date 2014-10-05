@@ -5,6 +5,9 @@ var util = require('./util');
 
 x64.aBlankCpu = function() {
   return {
+    stdin: '',
+    stdout: '',
+    stderr: '',
     registers: {
       rax: 0,
       rbx: 0,
@@ -69,6 +72,11 @@ x64.executeProgram = function(cpu) {
 };
 
 x64.executeInstruction = function(cpu, instruction) {
+
+  // Remove any comment
+  instruction = instruction.replace(/;.*$/, '');
+  instruction = instruction.trim();
+
   var opCode = instruction.split(' ').shift();
   var args = getArguments(instruction);
   if (cpu.debug) {
@@ -105,7 +113,9 @@ var isALabel = function(instruction) {
 
 var getArguments = function(str) {
   // TODO: instructions are assumed to have a space after the comma
-  return str.replace(',', '')
+  return str.replace(',', ' ')
+            .trim()
             .split(' ')
-            .slice(1);
+            .slice(1)
+            .filter(function(x) { return x.length }); // hack
 };

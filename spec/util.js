@@ -46,11 +46,11 @@ describe('util', function() {
 
   describe('isALabel', function() {
     it('finds _start', function() {
-      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      cpu = x64.loadProgramIntoMemory(cpu, specData.program('tiny-program'));
       assert.isTrue(util.isALabel(cpu, '_start'));
     });
     it('does not have its jimmies rustled', function() {
-      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      cpu = x64.loadProgramIntoMemory(cpu, specData.program('tiny-program'));
       assert.isFalse(util.isALabel(cpu, 'jimmies'));
     });
   });

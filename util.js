@@ -58,6 +58,8 @@ util.findLabelIndexStrict = function(cpu, label) {
 
 util.findLabelIndex = function(cpu, label) {
   return cpu.memory.reduce(function(acc, instruction, index) {
+    instruction = instruction.replace(/;.*$/, '');
+    instruction = instruction.trim();
     return instruction === label+':' ? index : acc;
   }, -1);
 };

@@ -34,7 +34,8 @@ instructions.int = function(cpu, args) {
     }
   }
   else {
-    throw "Interrupt vector "+vector+" not found.";;
+    console.log(args);
+    throw Error("Interrupt vector "+vector+" not found.");
   }
   return cpu;
 };

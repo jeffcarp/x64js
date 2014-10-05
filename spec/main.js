@@ -15,6 +15,9 @@ describe('x64', function() {
 
     it('returns a full CPU', function() {
       var cpuSpec = {
+        stdin: '',
+        stdout: '',
+        stderr: '',
         registers: {
           rax: 0,
           rbx: 0,
@@ -35,7 +38,7 @@ describe('x64', function() {
   describe('loadProgramIntoMemory', function() {
 
     it('copies an array of strings into memory', function() {
-      var program = specData.tinyProgram();
+      var program = specData.program('tiny-program');
       cpu = x64.loadProgramIntoMemory(cpu, program);
       assert.deepEqual(cpu.memory, program);
     });
@@ -52,7 +55,7 @@ describe('x64', function() {
     });
 
     it('the stack should be initialized with argc (0 for now)', function() {
-      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      cpu = x64.loadProgramIntoMemory(cpu, specData.program('tiny-program'));
       assert.deepEqual(cpu.stack, [0]);
     });
 
@@ -67,7 +70,7 @@ describe('x64', function() {
   describe('stepProgramOnce', function() {
 
     it('takes one step at a time', function() {
-      cpu = x64.loadProgramIntoMemory(cpu, specData.tinyProgram());
+      cpu = x64.loadProgramIntoMemory(cpu, specData.program('tiny-program'));
       assert.equal(cpu.registers.rip, 0);
       cpu = x64.stepProgramOnce(cpu);
       assert.equal(cpu.registers.rip, 1);
