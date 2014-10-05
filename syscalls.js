@@ -11,7 +11,12 @@ syscalls[1] = function(cpu) {
 // rcx:   pointer to first char
 // rdx:   message length in bytes
 syscalls[4] = function(cpu) {
-  cpu.stdout += 'testtest';
+  var fd = cpu.registers.rbx;
+  var address = cpu.registers.rcx;
+  if (fd === 1) {
+    cpu.stdout += cpu.memory[address];
+  }
+  // Else, write to file?
   return cpu;
 };
 
