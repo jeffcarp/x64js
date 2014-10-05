@@ -2,7 +2,7 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 
 ## TODO
 
-- [ ] Add public API usage in README (`aBlankCpu()`, `stepProgramOnce()`)
+- [x] Add public API usage in README (`aBlankCpu()`, `stepProgramOnce()`)
 - [x] Implement the 13 instructions stubbed in `test/test.js`
 - [x] Implement labels (could be improved)
 - [ ] Implement `db` and `dd` pseudo-instructions (from nasm)
@@ -10,12 +10,14 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 - [x] Change cpu.instructionPointer to `rip` - containing "the address of the next instruction to be executed if no branching is done"
 - [x] Implement comments
 
-## API
+## Usage
 
 ```javascript
 var x64 = require('x64js');
 
 var cpu = x64.aBlankCpu();
+cpu = x64.loadProgramFromFile(cpu, './hello-world.asm');
+cpu = x64.stepProgramOnce(cpu);
 ```
 
 ## Assumptions
@@ -23,11 +25,13 @@ var cpu = x64.aBlankCpu();
 - This cpu can only hold one program in memory at a time.
 - There is no operating system.
 
-## Run tests
+## Goals
 
-```bash
-npm test
-```
+- To be able to feed this module a reasonably simple NASM file and have it produce the expected output.
+
+## Style and Structure
+
+- This is intentionally coded in a functional style, leaving the management of state up to you.
 
 ## Reference
 
