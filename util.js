@@ -78,3 +78,53 @@ util.opFromInstruction = function(instruction) {
     .split(' ')
     .shift();
 };
+
+util.getDataSection = function(cpu) {
+  var inData = false;
+  return cpu.memory.filter(function(op) {
+    if (util.opFromInstruction(op) === 'section') {
+      var name = util.getArguments(op).shift();
+      inData = name === '.data';
+    }
+    return inData;
+  });
+};
+
+util.isAData = function(cpu, str) {
+  return util.getDataSection(cpu).some(function(op) {
+    return util.opFromInstruction(op) === str;
+  });
+};
+
+util.getDataValue = function(cpu, str) {
+  var ops = util.getDataSection(cpu).filter(function(op) {
+    return util.opFromInstruction(op) === str;
+  });
+  var op = ops.shift();
+  op = op.replace(',', ' ');
+  var args = util.getArguments(op).slice(1)
+  args = args.map(function(arg) {
+    if (arg.slice(0, 2) === '0x') {
+      return String.fromCharCode(arg);
+    }
+    else if (arg[0] === "'") {
+      return arg.slice(1, arg.length-1);
+    }
+    else {
+      return arg;
+    }
+  });
+  console.log(args.join(' '));
+  return args.join(' ');
+};
+
+util.getArguments = function(str) {
+  // TODO: ew
+  str = str.replace(/;.*$/, '');
+
+  return str.replace(',', ' ')
+            .trim()
+            .split(' ')
+            .slice(1)
+            .filter(function(x) { return x.length }); // hack
+};

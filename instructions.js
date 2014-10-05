@@ -78,6 +78,9 @@ instructions.mov = function(cpu, args) {
   if (util.isARegister(cpu, value)) {
     value = cpu.registers[value];
   }
+  else if (util.isAData(cpu, value)) {
+    value = util.getDataValue(cpu, value);
+  }
   cpu.registers[dest] = Number(value);
   return cpu;
 };

@@ -39,7 +39,7 @@ x64.loadProgramIntoMemory = function(cpu, instructions) {
   cpu.globals = cpu.memory.filter(function(instr) {
     return util.opFromInstruction(instr) === 'global';
   }).map(function(instr) {
-    return getArguments(instr).shift();
+    return util.getArguments(instr).shift();
   });
 
   return cpu;
@@ -86,7 +86,7 @@ x64.executeProgram = function(cpu) {
 x64.executeInstruction = function(cpu, instruction) {
 
   var opCode = util.opFromInstruction(instruction);
-  var args = getArguments(instruction);
+  var args = util.getArguments(instruction);
   if (cpu.debug) {
     console.log(cpu);
   }
@@ -119,11 +119,3 @@ var isALabel = function(instruction) {
   return instruction.indexOf(':') !== -1;
 };
 
-var getArguments = function(str) {
-  // TODO: instructions are assumed to have a space after the comma
-  return str.replace(',', ' ')
-            .trim()
-            .split(' ')
-            .slice(1)
-            .filter(function(x) { return x.length }); // hack
-};

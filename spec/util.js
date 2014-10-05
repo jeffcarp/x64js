@@ -61,4 +61,31 @@ describe('util', function() {
     });
   });
 
+  describe('isAData', function() {
+
+    it('finds an existing data label', function() {
+      var program = specData.program('hello-world');
+      cpu = x64.loadProgramIntoMemory(cpu, program);
+      assert.isTrue(util.isAData(cpu, 'msg'));
+    });
+
+    it('correctly identifies a non-data label', function() {
+      var program = specData.program('hello-world');
+      cpu = x64.loadProgramIntoMemory(cpu, program);
+      assert.isFalse(util.isAData(cpu, 'flubber'));
+    });
+
+  });
+
+  describe.only('getDataValue', function() {
+
+    it('handles db string values', function() {
+      var program = specData.program('hello-world');
+      cpu = x64.loadProgramIntoMemory(cpu, program);
+      var msg = util.getDataValue(cpu, 'msg');
+      assert.equal(msg, 'Hello, world!\n');
+    });
+
+  });
+
 });

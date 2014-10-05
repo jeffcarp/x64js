@@ -103,10 +103,14 @@ describe('instructions', function() {
       cpu = instructions.mov(cpu, ['rbx', '18']);
       assert.equal(cpu.registers.rbx, 18);
     });
-    it('should assign another register\'s value to a register', function() {
+    it("assigns a data label's value to a register", function() {
       cpu.registers.rbx = 11;
-      cpu = instructions.mov(cpu, ['rbx', '18']);
-      assert.equal(cpu.registers.rbx, 18);
+      cpu.memory = [
+        'section .data',
+        'msg db "banana phone"'
+      ];
+      cpu = instructions.mov(cpu, ['rbx', 'msg']);
+      assert.equal(cpu.registers.rbx, 1);
     });
   });
 

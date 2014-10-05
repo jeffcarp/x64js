@@ -35,7 +35,7 @@ describe('integration tests:', function() {
     assert.equal(cpu.registers.rbx, 1);
 
     // Not testing the right thing yet
-    assert.notEqual(cpu.stdout.length, 0);
+    assert.equal(cpu.stdout, 'Hello, world!\n');
   });
 
 });
