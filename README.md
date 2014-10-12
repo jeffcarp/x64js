@@ -10,6 +10,8 @@ This is an attempt to create a toy CPU interpreting a subset of the x86\_64 inst
 - [x] Change cpu.instructionPointer to `rip` - containing "the address of the next instruction to be executed if no branching is done"
 - [x] Implement comments
 
+Would be really cool to have: a suite of integration tests that took NASM files, actually compiled them using `nasm`, and actually compared the output against that of x64js.
+
 ## Usage
 
 ```javascript
