@@ -77,13 +77,40 @@ describe('util', function() {
 
   });
 
-  describe.only('getDataValue', function() {
+  describe('removeComment', function() {
+
+    it('removes a comment', function() {
+      var inst1 = 'int 0x80 ; syscall';
+      var inst2 = util.removeComment(inst1);
+      assert.equal(inst2, 'int 0x80 ');
+    });
+
+    it('does nothing if no comment', function() {
+      var inst1 = 'int 0x80';
+      var inst2 = util.removeComment(inst1);
+      assert.equal(inst2, 'int 0x80');
+    });
+
+  });
+
+  describe('getDataValue', function() {
 
     it('handles db string values', function() {
       var program = specData.program('hello-world');
       cpu = x64.loadProgramIntoMemory(cpu, program);
       var msg = util.getDataValue(cpu, 'msg');
       assert.equal(msg, 'Hello, world!\n');
+    });
+
+  });
+
+  describe('getDataPointer', function() {
+
+    it('handles two similar values', function() {
+      var program = specData.program('hello-world');
+      cpu = x64.loadProgramIntoMemory(cpu, program);
+      var pointer = util.getDataPointer(cpu, 'msg');
+      assert.equal(pointer, 12);
     });
 
   });

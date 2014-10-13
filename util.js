@@ -90,10 +90,47 @@ util.getDataSection = function(cpu) {
   });
 };
 
+util.getDataSectionAddress = function(cpu) {
+  var pointer = null;
+  for (var i in cpu.memory) {
+    if (cpu.memory[i].indexOf('section') >= 0
+     && cpu.memory[i].indexOf('.data') >= 0) {
+       pointer = i;
+     }
+  }
+  if (pointer === null) {
+    throw "Could not find data section";
+  }
+  return pointer;
+};
+
 util.isAData = function(cpu, str) {
   return util.getDataSection(cpu).some(function(op) {
     return util.opFromInstruction(op) === str;
   });
+};
+
+util.removeComment = function(str) {
+  var index = str.indexOf(';');
+  if (index >= 0) {
+    str = str.slice(0, index);
+  }
+  return str;
+};
+
+util.getDataPointer = function(cpu, str) {
+  var dataSectionAddress = util.getDataSectionAddress(cpu);
+  var datas = util.getDataSection(cpu);
+  var pointer = null;
+  for (var i in datas) {
+    var instr = datas[i].trim();
+    if (instr.slice(0, str.length) === str) {
+      pointer = i;
+    }
+  }
+  pointer = Number(pointer);
+  dataSectionAddress = Number(dataSectionAddress);
+  return pointer + dataSectionAddress;
 };
 
 util.getDataValue = function(cpu, str) {
@@ -101,21 +138,51 @@ util.getDataValue = function(cpu, str) {
     return util.opFromInstruction(op) === str;
   });
   var op = ops.shift();
-  op = op.replace(',', ' ');
-  var args = util.getArguments(op).slice(1)
+
+  op = util.removeComment(op);
+
+  var index = op.indexOf('db');
+  var dataStr = op.slice(index+2);
+
+  /*
+  * Using eval to access JavaScript's
+  * parser instead of writing a new one.
+  */
+  var args = eval('[' + dataStr + ']');
+
   args = args.map(function(arg) {
-    if (arg.slice(0, 2) === '0x') {
+    if (typeof arg === 'number') {
       return String.fromCharCode(arg);
-    }
-    else if (arg[0] === "'") {
-      return arg.slice(1, arg.length-1);
     }
     else {
       return arg;
     }
   });
-  console.log(args.join(' '));
-  return args.join(' ');
+  return args.join('');
+};
+
+util.getDataValueFromPointer = function(cpu, pointer) {
+  var op = cpu.memory[pointer];
+  op = util.removeComment(op);
+
+  var index = op.indexOf('db');
+  var dataStr = op.slice(index+2);
+
+  /*
+  * Using eval to access JavaScript's
+  * parser instead of writing a new one.
+  */
+  var args = eval('[' + dataStr + ']');
+
+  args = args.map(function(arg) {
+    if (typeof arg === 'number') {
+      return String.fromCharCode(arg);
+    }
+    else {
+      return arg;
+    }
+  });
+  return args.join('');
 };
 
 util.getArguments = function(str) {

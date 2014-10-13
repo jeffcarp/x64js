@@ -25,13 +25,14 @@ describe('syscalls', function() {
 
     it('goes down the happy path', function() {
       cpu.registers.rbx = 1; // stdout
-      cpu.registers.rcx = 0; // beginning char
+      cpu.registers.rcx = 1; // beginning char
       cpu.registers.rdx = 1; // length
       cpu.memory = [
-        'stuff'
+        'section .data',
+        'stuff db "Yello"'
       ];
       syscalls[4](cpu);
-      assert.equal(cpu.stdout, 'stuff');
+      assert.equal(cpu.stdout, 'Yello');
     });
 
     it('does nothing right now when passed a non-stdout FD', function() {

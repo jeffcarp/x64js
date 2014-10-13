@@ -88,7 +88,7 @@ x64.executeInstruction = function(cpu, instruction) {
   var opCode = util.opFromInstruction(instruction);
   var args = util.getArguments(instruction);
   if (cpu.debug) {
-    console.log(cpu);
+    console.info(cpu);
   }
   if (isValidInstruction(opCode)) {
     cpu = instructions[opCode](cpu, args);

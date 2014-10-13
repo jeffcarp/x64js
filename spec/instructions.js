@@ -103,7 +103,7 @@ describe('instructions', function() {
       cpu = instructions.mov(cpu, ['rbx', '18']);
       assert.equal(cpu.registers.rbx, 18);
     });
-    it("assigns a data label's value to a register", function() {
+    it("assigns a data label's pointer to a register", function() {
       cpu.registers.rbx = 11;
       cpu.memory = [
         'section .data',

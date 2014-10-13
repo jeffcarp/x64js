@@ -34,7 +34,7 @@ instructions.int = function(cpu, args) {
     }
   }
   else {
-    console.log(args);
+    console.error(args);
     throw Error("Interrupt vector "+vector+" not found.");
   }
   return cpu;
@@ -79,7 +79,7 @@ instructions.mov = function(cpu, args) {
     value = cpu.registers[value];
   }
   else if (util.isAData(cpu, value)) {
-    value = util.getDataValue(cpu, value);
+    value = util.getDataPointer(cpu, value);
   }
   cpu.registers[dest] = Number(value);
   return cpu;

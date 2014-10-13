@@ -1,3 +1,5 @@
+var util = require('./util');
+
 var syscalls = module.exports = {};
 
 // exit()
@@ -14,7 +16,8 @@ syscalls[4] = function(cpu) {
   var fd = cpu.registers.rbx;
   var address = cpu.registers.rcx;
   if (fd === 1) {
-    cpu.stdout += cpu.memory[address];
+    var value = util.getDataValueFromPointer(cpu, address);
+    cpu.stdout += value;
   }
   // Else, write to file?
   return cpu;
