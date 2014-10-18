@@ -67,6 +67,18 @@ describe('x64', function() {
 
   });
 
+  describe('loadProgramIntoMemoryFromFile', function() {
+
+    it('reads a file into memory', function() {
+      var path = __dirname + '/data/hello-world.asm';
+      cpu = x64.loadProgramIntoMemoryFromFile(cpu, path);
+
+      assert.notEqual(cpu.memory[3], undefined);
+      assert.include(cpu.memory[3], '_start');
+    });
+
+  });
+
   describe('stepProgramOnce', function() {
 
     it('takes one step at a time', function() {

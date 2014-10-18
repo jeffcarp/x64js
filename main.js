@@ -1,5 +1,6 @@
 var x64 = module.exports = {};
 
+var fs = require('fs');
 var instructions = require('./instructions');
 var util = require('./util');
 
@@ -46,7 +47,11 @@ x64.loadProgramIntoMemory = function(cpu, instructions) {
 };
 
 // Would be nice to have:
-x64.loadProgramIntoMemoryFromFile = null;
+x64.loadProgramIntoMemoryFromFile = function(cpu, filename) {
+  var fileStr = fs.readFileSync(filename, 'utf8');
+  cpu.memory = fileStr.split('\n');
+  return cpu;
+};
 
 x64.stepProgramOnce = function(cpu) {
 
