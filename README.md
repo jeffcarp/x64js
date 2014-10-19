@@ -1,5 +1,7 @@
 This is an attempt to create a toy CPU interpreting a subset of the x86\_64 instruction set in JavaScript.
 
+Check out a demo in React here: [http://jeffcarp.github.io/x64js/](http://jeffcarp.github.io/x64js/).
+
 ## TODO
 
 - [x] Add public API usage in README (`aBlankCpu()`, `stepProgramOnce()`)
