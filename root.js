@@ -22,6 +22,104 @@ var sampleProgram = [
   '  int 0x80'
 ];
 
+var Stack = React.createClass({
+  render: function() {
+    var cpu = this.props.cpu;
+    var stack = cpu.stack;
+
+    var addresses = Object.keys(stack).map(function(key) {
+      var value = stack[key];
+      return (
+        <div
+          key={key}
+          className='address'>
+          <strong>{key}</strong>
+          <span>{value}</span>
+        </div>
+      );
+    });
+
+    return (
+      <div className="memory">
+        {addresses}
+      </div>
+    );
+  }
+});
+
+var Memory = React.createClass({
+  render: function() {
+    var cpu = this.props.cpu;
+    var memory = cpu.memory;
+
+    var isCurrent = function(key) {
+      return key == cpu.registers.rip ? 'current' : '';
+    };
+
+    var addresses = Object.keys(memory).map(function(key) {
+      var instr = memory[key];
+      return (
+        <div
+          key={key}
+          className={isCurrent(key) + ' address'}>
+          <strong>{key}</strong>
+          <span>{instr}</span>
+        </div>
+      );
+    });
+
+    return (
+      <div className="memory">
+        {addresses}
+      </div>
+    );
+  }
+});
+
+var Computer = React.createClass({
+  render: function() {
+    var cpu = this.props.cpu;
+
+    var registers = Object.keys(cpu.registers).map(function(key) {
+      var value = cpu.registers[key];
+      return (
+        <td
+          className="register"
+          key={key}>
+          <h5>{key}</h5>
+          <div>{value}</div>
+        </td>
+      );
+    });
+
+    return (
+      <div className="computer">
+        <table>
+          <tr>
+            {registers.slice(0, 4)}
+          </tr>
+          <tr>
+            {registers.slice(4, 8)}
+          </tr>
+          <tr>
+            {registers.slice(8, 12)}
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td style={{width: '50%'}}>
+              <Memory cpu={this.props.cpu} />
+            </td>
+            <td style={{width: '50%'}}>
+              <Stack cpu={this.props.cpu} />
+            </td>
+          </tr>
+        </table>
+      </div>
+    );
+  }
+});
+
 var RootComponent = React.createClass({
   getInitialState: function() {
     var cpu = x64.aBlankCpu();
@@ -54,24 +152,6 @@ var RootComponent = React.createClass({
 
     var cpu = this.state.cpu;
 
-    var registers = cpu.registers;
-    var registersLis = Object.keys(registers).map(function(key) {
-      return <li key={key}>{key}: {registers[key]}</li>;
-    });
-
-    var memory = cpu.memory;
-    var curMemKey = function(key) {
-      return key == cpu.registers.rip ? 'current' : '';
-    };
-    var memoryLis = Object.keys(memory).map(function(key) {
-      return <li key={key} className={curMemKey(key)}>{key}: {memory[key]}</li>;
-    });
-
-    var stack = cpu.stack;
-    var stackLis = Object.keys(stack).map(function(key) {
-      return <li key={key}>{key}: {stack[key]}</li>;
-    });
-
     var programState = cpu.finished ? 'finished' : 'running';
 
     var stepOnceButton = cpu.finished ?
@@ -81,38 +161,15 @@ var RootComponent = React.createClass({
     return (
       <div>
         <h1>Current CPU State</h1>
-        <div>
+
+        <div className="controls">
           {stepOnceButton}
           <span>program is {programState}</span>
         </div>
-        <table>
-          <tr>
-            <td>
-              <textarea
-                onChange={this.codeChanged}
-                value={this.state.code}
-                ></textarea>
-            </td>
-            <td>
-              <h3>Registers</h3>
-              <ul>
-                {registersLis}
-              </ul>
-            </td>
-            <td>
-              <h3>Memory</h3>
-              <ul>
-                {memoryLis}
-              </ul>
-            </td>
-            <td>
-              <h3>Stack</h3>
-              <ul>
-                {stackLis}
-              </ul>
-            </td>
-          </tr>
-        </table>
+
+        <h3>Look a Computer</h3>
+        <Computer cpu={this.state.cpu} />
+
       </div>
     );
   }
