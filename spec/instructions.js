@@ -1,6 +1,6 @@
 var instructions = require('../instructions');
 var assert = require('chai').assert;
-var x64 = require('../main');
+var x64 = require('../x64');
 var cpu;
 
 var setsCpu = function() {
