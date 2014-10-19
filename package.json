@@ -1,6 +1,6 @@
 {
   "name": "x64js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A toy cpu interpreting a subset of the x86_64 instruction set.",
   "main": "main.js",
   "directories": {
