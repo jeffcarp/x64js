@@ -61,7 +61,7 @@ var RootComponent = React.createClass({
 
     var memory = cpu.memory;
     var curMemKey = function(key) {
-      return key == cpu.registers.eip ? 'current' : '';
+      return key == cpu.registers.rip ? 'current' : '';
     };
     var memoryLis = Object.keys(memory).map(function(key) {
       return <li key={key} className={curMemKey(key)}>{key}: {memory[key]}</li>;
