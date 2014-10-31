@@ -1,4 +1,5 @@
 var assert = require('chai').assert;
+var mori = require('mori');
 var specData = require('./spec-data');
 var x64 = require('../x64');
 var cpu;
@@ -13,25 +14,20 @@ describe('x64', function() {
 
   describe('aBlankCpu', function() {
 
-    it('returns a full CPU', function() {
-      var cpuSpec = {
-        stdin: '',
-        stdout: '',
-        stderr: '',
-        globals: [],
-        registers: {
-          rax: 0,
-          rbx: 0,
-          rcx: 0,
-          rdx: 0,
-          rip: 0,       // next instruction
-          flags: {}
-        },
-        stack: [],
-        memory: [],
-        finished: false
-      };
-      assert.deepEqual(cpuSpec, cpu);
+    it.only('returns a full CPU', function() {
+      var cpuSpec = mori.hash_map(
+        'stdin',      '',
+        'stdout',     '',
+        'stderr',     '',
+        'globals',    mori.vector(),
+        'registers',  mori.hash_map(
+                        'rax', 0
+                      ),
+        'stack',      mori.vector(),
+        'memory',     mori.vector(),
+        'finished',   false
+      );
+      assert.ok(mori.equals(cpuSpec, x64.aBlankCpu()));
     });
 
   });

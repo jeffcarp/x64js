@@ -1,34 +1,30 @@
 var x64 = module.exports = {};
 
 var fs = require('fs');
+var mori = require('mori');
 var instructions = require('./instructions');
 var util = require('./util');
 
 x64.aBlankCpu = function() {
-  return {
-    stdin: '',
-    stdout: '',
-    stderr: '',
-    globals: [],
-    registers: {
-      rax: 0,
-      rbx: 0,
-      rcx: 0,
-      rdx: 0,
-      rip: 0,
-      flags: {}
-    },
-    stack: [],
-    memory: [],
-    finished: false
-  };
+  return mori.hash_map(
+    'stdin',      '',
+    'stdout',     '',
+    'stderr',     '',
+    'globals',    mori.vector(),
+    'registers',  mori.hash_map(
+                    'rax', 0
+                  ),
+    'stack',      mori.vector(),
+    'memory',     mori.vector(),
+    'finished',   false
+  );
 };
 
 // Takes an array of strings
 x64.loadProgramIntoMemory = function(cpu, instructions) {
 
-  // Naive 1 program-per-time for now
-  cpu.memory = instructions.slice(0); // copy
+  // 1 program-per-time for now
+  cpu.memory = instructions.slice(0); // copy array
 
   // Set rip to _start
   cpu.registers.rip = util.findLabelIndexStrict(cpu, '_start');
