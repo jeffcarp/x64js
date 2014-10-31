@@ -1,4 +1,5 @@
 var util = module.exports = {};
+var mori = require('mori');
 
 util.isARegister = function(cpu, name) {
   return name in cpu.registers;
@@ -57,11 +58,15 @@ util.findLabelIndexStrict = function(cpu, label) {
 };
 
 util.findLabelIndex = function(cpu, label) {
-  return cpu.memory.reduce(function(acc, instruction, index) {
+
+  var findIndex = function(acc, key, instruction) {
     instruction = instruction.replace(/;.*$/, '');
     instruction = instruction.trim();
-    return instruction === label+':' ? index : acc;
-  }, -1);
+    return instruction === label+':' ? key : acc;
+  };
+
+  var memory = mori.get(cpu, 'memory');
+  return mori.reduce_kv(findIndex, -1, memory);
 };
 
 util.isALabel = function(cpu, value) {

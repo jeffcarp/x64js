@@ -20,24 +20,36 @@ x64.aBlankCpu = function() {
   );
 };
 
-// Takes an array of strings
+// instructions is an array of strings
 x64.loadProgramIntoMemory = function(cpu, instructions) {
 
-  // 1 program-per-time for now
-  cpu.memory = instructions.slice(0); // copy array
+  // Array -> mori vector
+  instructions = mori.vector.apply(null, instructions);
+  cpu = mori.assoc(cpu, 'memory', instructions);
 
   // Set rip to _start
-  cpu.registers.rip = util.findLabelIndexStrict(cpu, '_start');
+  var startIndex = util.findLabelIndexStrict(cpu, '_start');
+  cpu = mori.assoc_in(cpu, ['registers', 'rip'], startIndex);
 
   // Push argc (0 for now) onto stack
-  cpu.stack.push(0);
+  var stack = mori.get(cpu, 'stack');
+  stack = mori.conj(stack, 0);
+  cpu = mori.assoc(cpu, 'stack', stack);
 
   // Read globals
-  cpu.globals = cpu.memory.filter(function(instr) {
+  var isGlobalOp = function(instr) {
+    console.log(instr, '=------', util.opFromInstruction(instr));
     return util.opFromInstruction(instr) === 'global';
-  }).map(function(instr) {
+  };
+  var getGlobalValue = function(instr) {
     return util.getArguments(instr).shift();
-  });
+  };
+
+  var memory = mori.get(cpu, 'memory');
+  var cpuGlobals = mori.filter(isGlobalOp, memory);
+
+   // cpu.memory.filter().map();
+  console.log(cpuGlobals);
 
   return cpu;
 };

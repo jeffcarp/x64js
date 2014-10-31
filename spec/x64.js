@@ -8,13 +8,17 @@ var setsCpu = function() {
   cpu = x64.aBlankCpu();
 };
 
+var assertEq = function(a, b) {
+  return assert.ok(mori.equals(a, b));
+};
+
 describe('x64', function() {
 
   beforeEach(setsCpu);
 
   describe('aBlankCpu', function() {
 
-    it.only('returns a full CPU', function() {
+    it('returns a full CPU', function() {
       var cpuSpec = mori.hash_map(
         'stdin',      '',
         'stdout',     '',
@@ -37,13 +41,19 @@ describe('x64', function() {
     it('copies an array of strings into memory', function() {
       var program = specData.program('tiny-program');
       cpu = x64.loadProgramIntoMemory(cpu, program);
-      assert.deepEqual(cpu.memory, program);
+
+      var memory = mori.get(cpu, 'memory');
+      assertEq(mori.vector.apply(null, program), memory);
     });
 
     it('sets RIP register to _start label', function() {
       var program = specData.program('tiny-program-2');
+      var specMemory = mori.vector.apply(null, program);
       cpu = x64.loadProgramIntoMemory(cpu, program);
-      assert.equal(cpu.registers.rip, 9); // Blank lines don't count
+
+      // Blank lines don't count
+      assertEq(mori.get_in(cpu, ['registers', 'rip']), 9);
+      assertEq(mori.get(cpu, 'memory'), specMemory);
     });
 
     it('throws an error if no _start label found', function() {
